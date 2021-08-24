@@ -1,3 +1,5 @@
+import 'package:drorji/login.dart';
+import 'package:drorji/signup.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/rendering.dart';
 
@@ -49,7 +51,10 @@ class Onboarding extends StatelessWidget {
                 primary: _hexcolor("#185FE6"), // background
                 onPrimary: Colors.white, // foreground
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignupPage()));
+              },
               child: Text(
                 'New patient? sign up',
                 style: TextStyle(fontSize: 20),
@@ -57,12 +62,17 @@ class Onboarding extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 20.0),
-            child: Text(
-              "Old patient? sign in",
-              style: TextStyle(fontSize: 15),
-            ),
-          )
+              margin: EdgeInsets.only(top: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Login()));
+                },
+                child: Text(
+                  "Old patient? sign in",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ))
         ]),
       ),
     );

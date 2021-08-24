@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:drorji/onboarding.dart';
+import 'package:drorji/signup.dart';
 import "package:http/http.dart" as http;
 import "package:flutter/material.dart";
 import 'package:flutter/rendering.dart';
@@ -49,7 +51,8 @@ class Login extends StatelessWidget {
       });
       var mes = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        print("yo");
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Onboarding()));
       } else {
         showbar(context, mes["detail"]);
       }
@@ -98,7 +101,7 @@ class Login extends StatelessWidget {
               ),
               Column(
                 children: <Widget>[
-                  makeinput(label: "Phonenumber", controller: phonenumber),
+                  makeinput(label: "Phone number", controller: phonenumber),
                   makeinput(
                       label: "Password",
                       obscureText: true,
@@ -137,11 +140,15 @@ class Login extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text("Don't have an account?"),
-                  Text(
-                    " Signup",
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignupPage()));
+                    },
+                    child: Text("Don't have an account? Signup"),
+                  )
                 ],
               ),
             ],

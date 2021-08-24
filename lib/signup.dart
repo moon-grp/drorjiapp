@@ -1,3 +1,4 @@
+import 'package:drorji/login.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatelessWidget {
@@ -81,11 +82,13 @@ class SignupPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text("Already have an account?"),
-                  Text(
-                    " Login",
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Login()));
+                    },
+                    child: Text("Already have an account? login"),
+                  )
                 ],
               ),
             ],

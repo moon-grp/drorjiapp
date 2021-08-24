@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Dr orji telemedicine',
         home: Scaffold(
-          body: Login(),
+          body: Onboarding(),
         ));
   }
 }
