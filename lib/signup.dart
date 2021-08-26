@@ -1,10 +1,79 @@
 import 'package:drorji/login.dart';
+import 'package:drorji/onboarding.dart';
 import 'package:flutter/material.dart';
+import "package:http/http.dart" as http;
+import 'dart:convert';
 
 class SignupPage extends StatelessWidget {
+  final authcode = TextEditingController();
+  final password = TextEditingController();
+  final GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    void showbar(BuildContext context, message) {
+      final snackBar = SnackBar(
+          backgroundColor: Colors.red,
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(Icons.error_outline, size: 32),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  message,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
+          ));
+    }
+
+    _snak(message) {
+      _scafKey.currentState!.showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(Icons.error_outline, size: 32),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  message,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
+          )));
+      ;
+    }
+
+    _register() async {
+      var data = {
+        "password": password.text,
+        "passcode": authcode.text,
+      };
+
+      var url =
+          Uri.parse("https://drorjibkd.herokuapp.com/api/v1/users/signup");
+      var response = await http.post(url, body: jsonEncode(data), headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      });
+
+      var mes = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Onboarding()));
+      } else {
+        //showbar(context, mes["detail"]);
+        _snak(mes["detail"]);
+      }
+    }
+
     return Scaffold(
+      key: _scafKey,
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -47,9 +116,11 @@ class SignupPage extends StatelessWidget {
               ),
               Column(
                 children: <Widget>[
-                  makeInput(label: "AuthCode"),
-                  makeInput(label: "Password", obscureText: true),
-                  makeInput(label: "Confirm Password", obscureText: true),
+                  makeInput(label: "Passcode", controller: authcode),
+                  makeInput(
+                      label: "Password",
+                      obscureText: true,
+                      controller: password),
                 ],
               ),
               Container(
@@ -65,7 +136,9 @@ class SignupPage extends StatelessWidget {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   height: 60,
-                  onPressed: () {},
+                  onPressed: () {
+                    _register();
+                  },
                   color: _hexcolor("#185FE6"),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -98,10 +171,7 @@ class SignupPage extends StatelessWidget {
     );
   }
 
-  Widget makeInput({
-    label,
-    obscureText = false,
-  }) {
+  Widget makeInput({label, obscureText = false, controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -114,6 +184,7 @@ class SignupPage extends StatelessWidget {
           height: 5,
         ),
         TextField(
+          controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),

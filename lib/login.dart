@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:drorji/mainmenu.dart';
 import 'package:drorji/onboarding.dart';
 import 'package:drorji/signup.dart';
 import "package:http/http.dart" as http;
@@ -10,6 +11,7 @@ class Login extends StatelessWidget {
   final formkey = GlobalKey<FormState>();
   final phonenumber = TextEditingController();
   final password = TextEditingController();
+  final GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,25 @@ class Login extends StatelessWidget {
         ..showSnackBar(snackBar);
     }
 
+    _snak(message) {
+      _scafKey.currentState!.showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(Icons.error_outline, size: 32),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  message,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
+          )));
+      ;
+    }
+
     _register() async {
       var data = {
         "password": password.text,
@@ -52,13 +73,14 @@ class Login extends StatelessWidget {
       var mes = jsonDecode(response.body);
       if (response.statusCode == 200) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Onboarding()));
+            context, MaterialPageRoute(builder: (context) => mainmenu()));
       } else {
-        showbar(context, mes["detail"]);
+        _snak(mes["detail"]);
       }
     }
 
     return Scaffold(
+      key: _scafKey,
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
